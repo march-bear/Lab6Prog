@@ -6,7 +6,9 @@ import collection.CollectionWrapper
 import exceptions.CancellationException
 import iostreamers.Messenger
 import iostreamers.TextColor
+import kotlinx.serialization.Serializable
 
+@Serializable
 class GetUniquePostalAddressRequest : Request {
     override fun process(collection: CollectionWrapper<Organization>, cController: CollectionController): Response {
         val setOfAddresses = collection.map { it.postalAddress.toString() }.toSet()

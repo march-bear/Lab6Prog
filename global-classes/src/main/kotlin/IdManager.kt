@@ -1,6 +1,7 @@
 import collection.CollectionWrapper
+import collection.LinkedListSerializer
+import kotlinx.serialization.Serializable
 import java.util.*
-
 
 class IdManager(private val collection: CollectionWrapper<Organization>) {
     private var counter: Long = 1

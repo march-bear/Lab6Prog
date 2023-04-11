@@ -6,10 +6,13 @@ import collection.CollectionWrapper
 import exceptions.CancellationException
 import iostreamers.Messenger
 import iostreamers.TextColor
+import kotlinx.serialization.Serializable
 
 /**
  * Запрос на добавление нового элемента в коллекцию
  */
+
+@Serializable
 class AddRequest(
     private val element: Organization,
 ) : Request {

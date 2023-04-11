@@ -6,13 +6,16 @@ import collection.CollectionWrapper
 import exceptions.CancellationException
 import iostreamers.Messenger
 import iostreamers.TextColor
+import kotlinx.serialization.Serializable
 
 /**
  * Запрос на обновление значения элемента по его id
  */
+
+@Serializable
 class UpdateRequest(
     private val id: Long,
-    element: Organization,
+    private val element: Organization,
 ) : Request {
     private var oldValue: Organization? = null
     private var collection: CollectionWrapper<Organization>? = null

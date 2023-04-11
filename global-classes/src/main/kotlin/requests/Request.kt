@@ -3,12 +3,15 @@ package requests
 import CollectionController
 import Organization
 import collection.CollectionWrapper
+import kotlinx.serialization.Serializable
 
 
 /**
  * Интерфейс, реализуемый всеми запросами
  */
-interface Request {
+
+@Serializable
+sealed interface Request {
     /**
      * Обрабатывает запрос
      * @param collection коллекция, по отношению к которой обрабатывается запрос
@@ -21,4 +24,5 @@ interface Request {
     fun cancel(): String
 }
 
+@Serializable
 data class Response(val requestCompleted: Boolean, val message: String, val archivable: Boolean = true)

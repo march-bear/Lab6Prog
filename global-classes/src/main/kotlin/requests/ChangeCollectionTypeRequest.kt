@@ -6,7 +6,9 @@ import collection.*
 import exceptions.CancellationException
 import iostreamers.Messenger
 import iostreamers.TextColor
+import kotlinx.serialization.Serializable
 
+@Serializable
 class ChangeCollectionTypeRequest(private val collectionType: CollectionType) : Request {
     private var collection: CollectionWrapper<Organization>? = null
     private var oldType: CollectionType? = null

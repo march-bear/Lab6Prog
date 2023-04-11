@@ -3,15 +3,20 @@ package requests
 import CollectionController
 import Organization
 import collection.CollectionWrapper
+import collection.LinkedListSerializer
 import exceptions.CancellationException
 import iostreamers.Messenger
 import iostreamers.TextColor
+import kotlinx.serialization.Serializable
 import java.util.*
 
 /**
  * Запрос на удаление из коллекции всех элементов, меньших, чем данный
  */
+
+@Serializable
 class RemoveLowerRequest(private val element: Organization) : Request {
+    @Serializable(with = LinkedListSerializer::class)
     private val removedElements: LinkedList<Organization> = LinkedList()
     private var collection: CollectionWrapper<Organization>? = null
 

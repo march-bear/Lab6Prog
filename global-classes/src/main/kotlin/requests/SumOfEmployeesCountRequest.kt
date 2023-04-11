@@ -5,8 +5,10 @@ import Organization
 import collection.CollectionWrapper
 import iostreamers.Messenger
 import iostreamers.TextColor
+import kotlinx.serialization.Serializable
 import kotlin.coroutines.cancellation.CancellationException
 
+@Serializable
 class SumOfEmployeesCountRequest : Request {
     override fun process(collection: CollectionWrapper<Organization>, cController: CollectionController): Response {
         val sum = collection.sumOf { it.employeesCount ?: 0 }

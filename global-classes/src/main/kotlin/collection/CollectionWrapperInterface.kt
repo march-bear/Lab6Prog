@@ -1,6 +1,8 @@
 package collection
 
+import kotlinx.serialization.Serializable
 
+@Serializable
 sealed interface CollectionWrapperInterface<E>: Iterable<E> {
     val size: Int
 

@@ -10,9 +10,11 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.*
 import java.util.LinkedList
+import java.util.concurrent.ConcurrentLinkedQueue
 
+@Serializable
 class LinkedListWrapper<E>(
-    private val linkedList: LinkedList<E> = LinkedList(),
+    @Serializable(with = LinkedListSerializer::class) private val linkedList: LinkedList<E> = LinkedList(),
 ) : CollectionWrapperInterface<E> {
     override val size: Int
         get() = linkedList.size
@@ -52,26 +54,26 @@ class LinkedListWrapper<E>(
     }
 }
 
-class LinkedListSerializer<E>(private val serializer: KSerializer<E>): KSerializer<LinkedList<E>> {
-    override fun serialize(enc: Encoder, obj: LinkedList<E>) {
-        enc.encodeSerializableValue(ListSerializer(serializer), obj.toList())
-    }
-
-    private val listSerializer = ListSerializer(serializer)
+class LinkedListSerializer<E>(private val elementSerializer: KSerializer<E>) : KSerializer<LinkedList<E>> {
+    private val listSerializer = ListSerializer(elementSerializer)
     override val descriptor: SerialDescriptor = listSerializer.descriptor
 
-    override fun deserialize(decoder: Decoder): LinkedList<E> = with(decoder as JsonDecoder) {
-        val list = decodeJsonElement().jsonArray.mapNotNull {
-            try {
+    override fun serialize(encoder: Encoder, value: LinkedList<E>) {
+        listSerializer.serialize(encoder, value.toList())
+    }
 
-                json.decodeFromJsonElement(serializer, it)
-            } catch (e: SerializationException) {
-                e.printStackTrace()
-                null
+    override fun deserialize(decoder: Decoder): LinkedList<E> {
+        val list = with(decoder as JsonDecoder) {
+            decodeJsonElement().jsonArray.mapNotNull {
+                try {
+                    json.decodeFromJsonElement(elementSerializer, it)
+                } catch (e: SerializationException) {
+                    e.printStackTrace()
+                    null
+                }
             }
         }
-        val linkedList = LinkedList<E>()
-        linkedList.addAll(list)
-        linkedList
+
+        return LinkedList(list)
     }
 }

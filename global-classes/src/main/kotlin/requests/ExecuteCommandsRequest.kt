@@ -3,6 +3,7 @@ package requests
 import CollectionController
 import Organization
 import collection.CollectionWrapper
+import collection.LinkedListSerializer
 import command.Command
 import command.CommandArgument
 import exceptions.CancellationException
@@ -10,6 +11,7 @@ import exceptions.CommandIsNotCompletedException
 import exceptions.InvalidArgumentsForCommandException
 import iostreamers.Messenger
 import iostreamers.TextColor
+import kotlinx.serialization.Serializable
 import java.util.*
 
 /**
@@ -17,7 +19,10 @@ import java.util.*
  * @param commands список команд на исполнение,
  * хранящий пары "Объект команды": "Аргументы команды"
  */
+
+@Serializable
 class ExecuteCommandsRequest(
+    @Serializable(with = LinkedListSerializer::class)
     private val commands: LinkedList<Pair<Command, CommandArgument>>,
 ) : Request {
     private val requests: Stack<Request> = Stack()

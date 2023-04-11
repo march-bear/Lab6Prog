@@ -1,4 +1,5 @@
 import kotlinx.serialization.KSerializer
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
@@ -77,6 +78,8 @@ class Organization() : Comparable<Organization> {
             if (field != null)
                 validate(this) { validate(Organization::employeesCount).isPositive() }
         }
+
+    @SerialName("typeOrg")
     var type: OrganizationType = OrganizationType.COMMERCIAL
     var postalAddress: Address? = null
 

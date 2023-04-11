@@ -3,11 +3,13 @@ package commandcallgraph
 import CollectionController
 import Organization
 import collection.CollectionWrapper
+import kotlinx.serialization.Serializable
 import requests.Request
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
+@Serializable
 class RequestGraph(
     private val collection: CollectionWrapper<Organization>,
     private val cController: CollectionController,

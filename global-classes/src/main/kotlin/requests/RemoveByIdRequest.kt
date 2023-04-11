@@ -6,10 +6,13 @@ import collection.CollectionWrapper
 import iostreamers.Messenger
 import iostreamers.TextColor
 import exceptions.CancellationException
+import kotlinx.serialization.Serializable
 
 /**
  * Запрос на удаление элемента из коллекции по его id
  */
+
+@Serializable
 class RemoveByIdRequest(private val id: Long) : Request {
     private var removedElement: Organization? = null
     private var collection: CollectionWrapper<Organization>? = null

@@ -6,10 +6,13 @@ import collection.CollectionWrapper
 import exceptions.CancellationException
 import iostreamers.Messenger
 import iostreamers.TextColor
+import kotlinx.serialization.Serializable
 
 /**
  * Запрос на очистку коллекции
  */
+
+@Serializable
 class ClearRequest : Request {
     private var oldCollection: CollectionWrapper<Organization>? = null
     private var newCollection: CollectionWrapper<Organization>? = null

@@ -1,6 +1,7 @@
 import collection.CollectionWrapper
 import commandcallgraph.RequestGraph
 import iostreamers.Messenger
+import kotlinx.serialization.Serializable
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import requests.Request
@@ -8,7 +9,7 @@ import requests.Response
 import java.io.File
 
 class CollectionController(
-    dataFileName: File? = null,
+    private val dataFileName: File? = null,
 ) : KoinComponent {
     companion object {
         fun checkUniquenessFullName(fullName: String?, collection: CollectionWrapper<Organization>): Boolean {

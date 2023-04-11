@@ -6,10 +6,13 @@ import collection.CollectionWrapper
 import exceptions.CancellationException
 import iostreamers.Messenger
 import iostreamers.TextColor
+import kotlinx.serialization.Serializable
 
 /**
  * Запрос на добавление нового элемента в коллекцию, если он является максимальным
  */
+
+@Serializable
 class AddIfMaxRequest(
     private val element: Organization,
 ) : Request {

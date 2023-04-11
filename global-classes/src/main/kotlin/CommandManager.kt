@@ -1,4 +1,5 @@
 import command.Command
+import kotlinx.serialization.Serializable
 import org.koin.core.error.NoBeanDefFoundException
 import org.koin.core.module.Module
 import org.koin.core.qualifier.named

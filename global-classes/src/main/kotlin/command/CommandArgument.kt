@@ -1,18 +1,22 @@
 package command
 
 import Organization
+import collection.LinkedListSerializer
 import exceptions.InvalidArgumentsForCommandException
+import kotlinx.serialization.Serializable
 import java.lang.NullPointerException
 import java.util.LinkedList
 import java.util.regex.Pattern
 
-
-class CommandArgument(argumentString: String? = null) {
+@Serializable
+class CommandArgument(private val argumentString: String? = null) {
     private companion object {
         val argsPattern: Pattern = Pattern.compile("(?<=^|\\s)\"(.*?)\"(?=\\s|\$)|(?<=^|\\s)(.*?)(?=\\s|\$)")
     }
 
     val primitiveTypeArguments: List<String>?
+
+    @Serializable(with = LinkedListSerializer::class)
     val organizations: LinkedList<Organization> = LinkedList()
     val organizationLimit: Int
 

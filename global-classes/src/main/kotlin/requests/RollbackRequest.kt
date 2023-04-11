@@ -7,7 +7,9 @@ import commandcallgraph.RequestGraph
 import exceptions.CancellationException
 import iostreamers.Messenger
 import iostreamers.TextColor
+import kotlinx.serialization.Serializable
 
+@Serializable
 class RollbackRequest(private val id: String): Request {
     private var oldCurrLeafId: String? = null
     private var currLeafId: String? = null

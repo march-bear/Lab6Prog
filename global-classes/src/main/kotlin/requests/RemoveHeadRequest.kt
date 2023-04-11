@@ -6,10 +6,13 @@ import collection.CollectionWrapper
 import exceptions.CancellationException
 import iostreamers.Messenger
 import iostreamers.TextColor
+import kotlinx.serialization.Serializable
 
 /**
  * Запрос на удаление первого элемента в коллекции
  */
+
+@Serializable
 class RemoveHeadRequest : Request {
     private var removedElement: Organization? = null
     private var collection: CollectionWrapper<Organization>? = null

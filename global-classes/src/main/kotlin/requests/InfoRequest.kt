@@ -5,8 +5,10 @@ import Organization
 import collection.CollectionWrapper
 import iostreamers.Messenger
 import iostreamers.TextColor
+import kotlinx.serialization.Serializable
 import kotlin.coroutines.cancellation.CancellationException
 
+@Serializable
 class InfoRequest : Request {
     override fun process(collection: CollectionWrapper<Organization>, cController: CollectionController): Response {
         var output = Messenger.message("Информация о коллекции:\n")

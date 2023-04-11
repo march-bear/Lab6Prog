@@ -1,5 +1,8 @@
 package collection
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 class LinkedHashSetWrapper<E>(private val set: LinkedHashSet<E> = LinkedHashSet()): CollectionWrapperInterface<E> {
     override val size: Int
         get() = set.size

@@ -5,7 +5,9 @@ import Organization
 import collection.CollectionWrapper
 import command.CommandResult
 import exceptions.CancellationException
+import kotlinx.serialization.Serializable
 
+@Serializable
 class ShowRequest : Request {
     override fun process(collection: CollectionWrapper<Organization>, cController: CollectionController): Response {
         if (collection.isEmpty()) {

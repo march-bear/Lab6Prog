@@ -1,9 +1,13 @@
 package collection
 
+import Organization
+import kotlinx.serialization.Serializable
 import java.lang.IllegalArgumentException
 import java.util.Date
 
+@Serializable
 class CollectionWrapper<E>(private var collection: CollectionWrapperInterface<E>) : CollectionWrapperInterface<E> {
+    @Serializable(with = Organization.Companion.DateAsLongSerializer::class)
     val initializationDate: Date = Date()
 
     override val size: Int

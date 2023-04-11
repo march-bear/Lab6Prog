@@ -4,7 +4,9 @@ import CollectionController
 import Organization
 import collection.CollectionWrapper
 import exceptions.CancellationException
+import kotlinx.serialization.Serializable
 
+@Serializable
 class SaveRequest : Request {
     override fun process(collection: CollectionWrapper<Organization>, cController: CollectionController): Response {
         try {
