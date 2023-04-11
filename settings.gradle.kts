@@ -1,2 +1,2 @@
 rootProject.name = "Lab6Prog"
-include(":server", ":client", ":global-classes")
+include(":server", ":client", ":tools", ":collections", ":variant-classes")

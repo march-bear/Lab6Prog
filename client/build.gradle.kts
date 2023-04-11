@@ -13,7 +13,7 @@ repositories {
 }
 
 dependencies {
-    "implementation"(project(":global-classes"))
+    "implementation"(project(":tools"))
     "implementation"("org.valiktor:valiktor-core:0.12.0")
     "implementation"("io.insert-koin:koin-core:3.3.3")
     "implementation"("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
