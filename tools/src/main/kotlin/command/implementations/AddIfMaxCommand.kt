@@ -18,7 +18,7 @@ class AddIfMaxCommand : Command {
 
         return CommandResult(
             true,
-            AddIfMaxRequest(args.organizations[0]),
+            AddIfMaxRequest(args.organization!!),
             message = "Запрос на добавление элемента отправлен"
         )
 

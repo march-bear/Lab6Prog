@@ -19,7 +19,7 @@ class RemoveLowerCommand : Command {
 
         return CommandResult(
             true,
-            RemoveLowerRequest(args.organizations[0]),
+            RemoveLowerRequest(args.organization!!),
             message = "Запрос на удаление всех элементов, меньших заданного, отправлен",
         )
     }

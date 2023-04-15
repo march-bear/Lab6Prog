@@ -6,13 +6,13 @@ import kotlinx.serialization.SerializationException
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
-
 
 class DataFileManager(private val collection: CollectionWrapper<Organization>, dataFile: File? = null) {
     private var dataHasBeenLoaded = false
@@ -61,9 +61,15 @@ class DataFileManager(private val collection: CollectionWrapper<Organization>, d
 
         output += "\nЗагрузка данных в коллекцию...\n"
 
-        val tmpCollection: List<Organization>
+        val tmpCollection: CollectionWrapper<Organization>
+        val moduleForPolymorphicSerializationAnyOrganization = SerializersModule {
+            polymorphic(Any::class, Organization::class, Organization.serializer())
+        }
+
+        val jsonWithPolymorphicModule = Json { serializersModule = moduleForPolymorphicSerializationAnyOrganization }
+
         try {
-            tmpCollection = Json.decodeFromString(data)
+            tmpCollection = jsonWithPolymorphicModule.decodeFromString(data)
         } catch (e: SerializationException) {
             return output + Messenger.message(
                 "\n$dataFile: загрузка прервана вследствие обнаруженной синтаксической ошибки\n",
@@ -71,10 +77,12 @@ class DataFileManager(private val collection: CollectionWrapper<Organization>, d
             )
         } catch (e: IllegalArgumentException) {
             return output + Messenger.message(
-                "$\ndataFile: загрузка прервана вследствие несоответствия формата данных в файле типу Organization\n",
+                "$\ndataFile: загрузка прервана вследствие несоответствия формата данных в файле типу коллекции\n",
                 TextColor.RED,
             )
         }
+
+        collection.initializationDate = tmpCollection.initializationDate
 
         for (elem in tmpCollection) {
             output += if (elem.objectIsValid()) {
@@ -109,7 +117,13 @@ class DataFileManager(private val collection: CollectionWrapper<Organization>, d
         if (!dataHasBeenLoaded)
             throw MethodCallException("В сохранении отказано: коллекция ещё не была загружена")
 
-        val data = Json.encodeToString(collection.toList())
+        val moduleForPolymorphicSerializationAnyOrganization = SerializersModule {
+            polymorphic(Any::class, Organization::class, Organization.serializer())
+        }
+
+        val jsonWithPolymorphicModule = Json { serializersModule = moduleForPolymorphicSerializationAnyOrganization }
+
+        val data = jsonWithPolymorphicModule.encodeToString(collection)
         writeToFile(data)
         return true
     }

@@ -8,7 +8,7 @@ import requests.Response
 import java.io.File
 
 class CollectionController(
-    private val dataFileName: File? = null,
+    dataFileName: File? = null,
 ) : KoinComponent {
     companion object {
         fun checkUniquenessFullName(fullName: String?, collection: CollectionWrapper<Organization>): Boolean {

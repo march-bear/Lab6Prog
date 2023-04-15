@@ -45,7 +45,7 @@ class ExecuteScriptCommand(
     }
 
     private fun addCommandsFromFile(fileName: String, commandList: LinkedList<Pair<Command, CommandArgument>>) {
-        if (fileName in this.scriptFiles) {
+        /*if (fileName in this.scriptFiles) {
             var message = "Обнаружен циклический вызов скрипта:"
 
             for (i in scriptFiles.indexOf(fileName) until scriptFiles.size)
@@ -95,7 +95,7 @@ class ExecuteScriptCommand(
             commandData = reader.readCommand()
         }
 
-        scriptFiles.pop()
+        scriptFiles.pop()*/
     }
 
     companion object {

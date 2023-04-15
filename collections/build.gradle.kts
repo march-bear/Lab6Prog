@@ -12,11 +12,10 @@ repositories {
 }
 
 dependencies {
-    "implementation"(project(":tools"))
-    "implementation"("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
-    "implementation"("org.jetbrains.kotlin:kotlin-stdlib")
-    "testImplementation"("org.jetbrains.kotlin:kotlin-test")
-    "testImplementation"("io.mockk:mockk:1.13.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib")
+    testImplementation("org.jetbrains.kotlin:kotlin-test")
+    testImplementation("io.mockk:mockk:1.13.4")
 }
 
 tasks.compileKotlin{

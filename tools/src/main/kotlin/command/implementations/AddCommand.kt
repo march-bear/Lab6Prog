@@ -14,7 +14,7 @@ class AddCommand : Command {
 
         return CommandResult(
             true,
-            AddRequest(args.organizations[0]),
+            AddRequest(args.organization!!),
             "Запрос на добавление элемента в коллекцию отправлен"
         )
     }

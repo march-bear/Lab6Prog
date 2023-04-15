@@ -35,15 +35,15 @@ class ArgumentValidator(private val argumentTypes: List<ArgumentType>) {
 
         if (counter != (args.primitiveTypeArguments?.size ?: 0))
             throw InvalidArgumentsForCommandException(
-                if (organizationCounter != 0 && args.organizations.size == 0)
+                if (organizationCounter != 0 && !args.needAnOrganization)
                     "аргумент - объект класса Organization - вводится на следующих строках " +
                             "(для ввода объекта в конце строки поставьте \\"
                 else
                     "${args.primitiveTypeArguments?.get(counter)}: неизвестный аргумент")
-        if (organizationCounter > args.organizations.size)
+        if (organizationCounter > if (args.needAnOrganization) 1 else 0)
             throw InvalidArgumentsForCommandException("Аргумент ORGANIZATION: не найден, " +
                     "для ввода объекта в конце строки поставьте \\")
-        else if (organizationCounter < args.organizations.size)
+        else if (organizationCounter < if (args.needAnOrganization) 1 else 0)
             throw InvalidArgumentsForCommandException("Неизвестный аргумент ORGANIZATION")
     }
 }

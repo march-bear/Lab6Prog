@@ -9,7 +9,7 @@ import java.util.Date
 @Serializable
 class CollectionWrapper<E>(private var collection: CollectionWrapperInterface<E>) : CollectionWrapperInterface<E> {
     @Serializable(with = DateAsLongSerializer::class)
-    val initializationDate: Date = Date()
+    var initializationDate: Date = Date()
 
     override val size: Int
         get() = collection.size

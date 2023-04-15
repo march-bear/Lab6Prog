@@ -1,9 +1,11 @@
 import collection.CollectionWrapper
+import collection.CollectionWrapperInterface
 import collection.LinkedListWrapper
 import command.*
 import command.implementations.*
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import sendreceivemanagers.ServerStreamSendReceiveManager
 import java.io.File
 import kotlin.collections.HashMap
 
@@ -78,8 +80,26 @@ val serverCommandManagerModule = module {
     }
 }
 
+val linkedListWrapperModule = module {
+    factory<CollectionWrapperInterface<Organization>> {
+        LinkedListWrapper()
+    }
+}
+
 val basicCollectionControllerModule = module {
     single { (file: File) -> CollectionController(file) }
 
-    single<CollectionWrapper<Organization>> { CollectionWrapper(LinkedListWrapper()) }
+    single<CollectionWrapper<Organization>> { CollectionWrapper(get()) }
+}
+
+val serverStreamSendReceiveManagerModule = module {
+    factory {(port: Int) ->
+        ServerStreamSendReceiveManager(port)
+    }
+}
+
+val serverWorkerModule = module {
+    single { (port: Int, fileName: String?) ->
+        ServerWorker(port, if (fileName != null) File(fileName) else null)
+    }
 }

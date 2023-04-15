@@ -20,7 +20,7 @@ class UpdateCommand : Command {
 
         return CommandResult(
             true,
-            UpdateRequest(id, args.organizations[0]),
+            UpdateRequest(id, args.organization!!),
             message = "Запрос на обновление значения элемента коллекции с id $id отправлен"
         )
     }

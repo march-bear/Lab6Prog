@@ -13,14 +13,14 @@ class CommandArgument(private val argumentString: String? = null) {
     }
 
     val primitiveTypeArguments: List<String>?
+    
+    var organization: Organization? = null
+        private set
 
-    @Serializable(with = LinkedListSerializer::class)
-    val organizations: LinkedList<Organization> = LinkedList()
-    val organizationLimit: Int
+    var needAnOrganization: Boolean = false
 
     init {
         primitiveTypeArguments = if (argumentString == null || argumentString.trim() == "") {
-            organizationLimit = 0
             null
         } else {
             val matcher = argsPattern.matcher(argumentString.trim())
@@ -28,20 +28,19 @@ class CommandArgument(private val argumentString: String? = null) {
             val tmpArgs = ArrayList<String>()
             while (matcher.find())
                 tmpArgs.add(matcher.group())
-            organizationLimit = if (tmpArgs.last() == "\\") {
+            if (tmpArgs.last() == "\\") {
                 tmpArgs.removeLast()
-                1
-            } else {
-                0
+                needAnOrganization = true
             }
+
             tmpArgs
         }
     }
-    fun addOrganization(org: Organization): Boolean {
-        if (organizations.size == organizationLimit)
+    fun setOrganization(org: Organization): Boolean {
+        if (!needAnOrganization)
             return false
 
-        organizations.add(org)
+        organization = org
         return true
     }
 }

@@ -45,12 +45,12 @@ class ExecuteCommandsRequest(
                 if (commandCompleted) {
                     if (message != null) output += Messenger.message(message) + "\n"
                     if (request != null) {
-                        val (requestCompleted, message) = request.process(collection, cController)
-                        output += message + "\n"
+                        val (requestCompleted, rMessage) = request.process(collection, cController)
+                        output += rMessage + "\n"
                         if (requestCompleted) {
                             requests.add(request)
                         } else {
-                            throw CommandIsNotCompletedException(message)
+                            throw CommandIsNotCompletedException(rMessage)
                         }
 
                     }
