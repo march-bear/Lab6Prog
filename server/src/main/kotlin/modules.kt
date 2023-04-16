@@ -3,9 +3,11 @@ import collection.CollectionWrapperInterface
 import collection.LinkedListWrapper
 import command.*
 import command.implementations.*
+import iostreamers.Messenger
+import network.WorkerInterface
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import sendreceivemanagers.ServerStreamSendReceiveManager
+import serverworker.StreamServerWorker
 import java.io.File
 import kotlin.collections.HashMap
 
@@ -14,7 +16,7 @@ val commandQualifiers = listOf(
     "remove_by_id", "clear", "save",
     "execute_script", "exit", "remove_head",
     "add_if_max", "remove_lower",
-    "sum_of_employees_count", "oops",
+    "sum_of_employees_count", "quack",
     "group_counting_by_employees_count",
     "print_unique_postal_address",
     "show_field_requirements",
@@ -51,12 +53,13 @@ val serverCommandModule = module {
     single<Command>(named("group_counting_by_employees_count")) { GroupCountingByEmployeesCountCommand() }
     single<Command>(named("print_unique_postal_address")) { PrintUniquePostalAddressCommand() }
 
-    single<Command>(named("oops")) {
+    single<Command>(named("quack")) {
         object : Command {
             override val info: String
-            get() = "взломать систему"
+            get() = "крякнуть систему"
 
             override fun execute(args: CommandArgument): CommandResult {
+                Messenger.whatThe()
                 return CommandResult(
                     false,
                     message = "Руки поотрывать тому, кто на сервере такие команды использует"
@@ -92,14 +95,8 @@ val basicCollectionControllerModule = module {
     single<CollectionWrapper<Organization>> { CollectionWrapper(get()) }
 }
 
-val serverStreamSendReceiveManagerModule = module {
-    factory {(port: Int) ->
-        ServerStreamSendReceiveManager(port)
-    }
-}
-
 val serverWorkerModule = module {
-    single { (port: Int, fileName: String?) ->
-        ServerWorker(port, if (fileName != null) File(fileName) else null)
+    single<WorkerInterface> {
+            (port: Int, fileName: String?) -> StreamServerWorker(port, fileName)
     }
 }

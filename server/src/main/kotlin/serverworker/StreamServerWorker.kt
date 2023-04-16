@@ -1,55 +1,58 @@
+package serverworker
+
+import CollectionController
+import CommandManager
+import OrganizationFactory
 import command.Command
 import command.CommandData
 import exceptions.InvalidArgumentsForCommandException
 import iostreamers.Messenger
 import iostreamers.Reader
 import iostreamers.TextColor
+import network.WorkerInterface
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
-import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
-import requests.Request
 import requests.Response
-import sendreceivemanagers.SendReceiveManagerInterface
 import java.io.File
-import java.net.Socket
+import java.net.ServerSocket
+import java.net.SocketException
 import java.util.*
-import java.util.concurrent.ConcurrentLinkedQueue
 import kotlin.NoSuchElementException
+import kotlin.system.exitProcess
 
-class ServerWorker(
+class StreamServerWorker(
     port: Int,
-    file: File?,
-) : KoinComponent {
-    private val controller: CollectionController = get { parametersOf(file) }
-    private val sendReceiveManager: SendReceiveManagerInterface<Response, Request?> by inject { parametersOf(port) }
-    private val commandManager: CommandManager by inject()
-    private val requests: Queue<Pair<Socket?, Request>> = ConcurrentLinkedQueue()
+    fileName: String?
+) : WorkerInterface, KoinComponent {
+    private val serv: ServerSocket = ServerSocket(port)
+    private val commandManager: CommandManager = get()
+    private val cController: CollectionController = get { parametersOf(if (fileName == null) null else File(fileName)) }
 
-    fun start() {
-        val interactiveMode = Thread { enableInteractiveMode() }
-        val requestsProcessing = Thread {
-            while(true)
-                if (requests.isNotEmpty()) {
-                    val (socket, request) = requests.poll()
-                    val response = controller.execute(request)
-                    if (socket == null) {
-                        Messenger.printMessage(
-                            "\n${response.message}",
-                            if (response.requestCompleted) TextColor.BLUE else TextColor.RED,
-                        )
-                        Messenger.inputPrompt(">>>")
+    override fun start() {
+        Thread {
+            enableGodMode()
+        }.start()
+
+        while (true) {
+            val sock = serv.accept()
+
+            val receiver = StreamServerReceiver(sock)
+            val sender = StreamServerSender(sock)
+            try {
+                while (true) {
+                    val request = receiver.receive()
+                    if (request == null) {
+                        sender.send(Response(false, "Запрос некорректен"))
+                    } else {
+                        sender.send(cController.process(request))
                     }
                 }
+            } catch (_: SocketException) { sock.close() }
         }
-
-        interactiveMode.start()
-
-        requestsProcessing.isDaemon = true
-        requestsProcessing.start()
     }
 
-    private fun enableInteractiveMode() {
+    private fun enableGodMode() {
         Messenger.godModeActivatedMessage()
         Messenger.printMessage(
             "\nДобро пожаловать в интерактивный режим сервера! " +
@@ -81,8 +84,10 @@ class ServerWorker(
 
                     if (completed) {
                         Messenger.printMessage(message, TextColor.BLUE)
-                        if (request != null)
-                            requests.add(Pair(null, request))
+                        if (request != null) {
+                            val (processing, output, _) = cController.process(request)
+                            Messenger.printMessage(output, if (processing) TextColor.BLUE else TextColor.RED)
+                        }
                     } else {
                         Messenger.printMessage(message, TextColor.RED)
                     }
@@ -98,11 +103,11 @@ class ServerWorker(
             commandData != null
             && !(
                     commandData.name == "exit"
-                    && commandData.args.primitiveTypeArguments == null
-                    && commandData.args.organization == null
+                            && commandData.args.primitiveTypeArguments == null
+                            && commandData.args.organization == null
                     )
         )
 
-        Messenger.printMessage("Выход из интерактивного режима...")
+        exitProcess(0)
     }
 }

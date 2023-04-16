@@ -37,7 +37,8 @@ class CollectionController(
     val idManager: IdManager
     val requestGraph: RequestGraph = RequestGraph(collection, this)
 
-    fun execute(request: Request) : Response {
+    @Synchronized
+    fun process(request: Request) : Response {
         val response = request.process(collection, this)
         if (response.archivable) {
             requestGraph.addLeaf(request, request::class.simpleName?.uppercase() ?: "REQUEST")
