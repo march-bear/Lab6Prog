@@ -1,5 +1,7 @@
+import clientworker.ChannelClientWorker
 import command.*
 import command.implementations.*
+import network.WorkerInterface
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import kotlin.collections.HashMap
@@ -42,12 +44,22 @@ val clientCommandModule = module {
     single<Command>(named("show_field_requirements")) { ShowFieldRequirementsCommand() }
 }
 
-val clientCommandManager = module {
+val clientCommandManagerModule = module {
     single {
         clientCommandModule
     }
 
     single {
         CommandManager(get())
+    }
+}
+
+val channelClientWorkerManager = module {
+    single<WorkerInterface> {(port: Int, host: String) ->
+        ChannelClientWorker(port, host)
+    }
+
+    single<WorkerInterface> {(port: Int) ->
+        ChannelClientWorker(port)
     }
 }

@@ -2,7 +2,6 @@ package clientworker
 
 import CommandManager
 import OrganizationFactory
-import clientCommandModule
 import command.Command
 import command.CommandData
 import exceptions.InvalidArgumentsForCommandException
@@ -14,6 +13,8 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import network.WorkerInterface
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 import requests.Request
 import requests.Response
 import java.io.IOException
@@ -33,18 +34,17 @@ import kotlin.system.exitProcess
 class ChannelClientWorker (
     serverPort: Int,
     serverHost: String = "localhost",
-) : WorkerInterface {
+) : WorkerInterface, KoinComponent {
     private val remote = InetSocketAddress(serverHost, serverPort)
     private var sock = SocketChannel.open()
     private var selector = Selector.open()
     private val queue: BlockingQueue<Request> = ArrayBlockingQueue(1)
-    private val commandManager: CommandManager = CommandManager(clientCommandModule)
+    private val commandManager: CommandManager = get()
     private val buffer: ByteBuffer = ByteBuffer.allocate(65536)
-
 
     override fun start() {
         if (!connect()) {
-            println("Блэт")
+            Messenger.printMessage("Сервер недоступен", TextColor.RED)
             return
         }
 
@@ -60,13 +60,13 @@ class ChannelClientWorker (
 
             for (key in keys) {
                 if (key.isValid && key.isWritable) {
-                    send(queue.take());
+                    send(queue.take())
                     sock.register(selector, OP_READ)
                 }
                 if (key.isValid && key.isReadable) {
                     val response = receive()
                     if (response != null) {
-                        Messenger.printMessage("\n${response.message}");
+                        Messenger.printMessage("\n${response.message}")
                         Messenger.inputPrompt(">>>", delimiter = " ")
                     }
 
@@ -219,9 +219,5 @@ class ChannelClientWorker (
 
         if (sock.isOpen)
             sock.close()
-    }
-
-    companion object {
-        const val CONNECTION_TIMEOUT = 10000L
     }
 }

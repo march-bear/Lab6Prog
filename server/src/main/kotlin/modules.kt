@@ -90,7 +90,9 @@ val linkedListWrapperModule = module {
 }
 
 val basicCollectionControllerModule = module {
-    single { (file: File) -> CollectionController(file) }
+    single { (file: File?) ->
+        println(file.toString()); CollectionController(file)
+    }
 
     single<CollectionWrapper<Organization>> { CollectionWrapper(get()) }
 }

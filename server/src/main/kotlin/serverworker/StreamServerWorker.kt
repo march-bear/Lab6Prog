@@ -13,6 +13,7 @@ import network.WorkerInterface
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
+import org.slf4j.LoggerFactory
 import requests.Response
 import java.io.File
 import java.net.ServerSocket
@@ -25,30 +26,40 @@ class StreamServerWorker(
     port: Int,
     fileName: String?
 ) : WorkerInterface, KoinComponent {
+    private val log = LoggerFactory.getLogger(StreamServerWorker::class.java)
     private val serv: ServerSocket = ServerSocket(port)
     private val commandManager: CommandManager = get()
     private val cController: CollectionController = get { parametersOf(if (fileName == null) null else File(fileName)) }
 
     override fun start() {
+        log.info("Новый запуск сервера")
         Thread {
+            log.info("Активирован интерактивный режим сервера")
             enableGodMode()
         }.start()
 
         while (true) {
+            log.info("Ожидание подключения")
             val sock = serv.accept()
+            log.info("Новое подключение $sock")
 
-            val receiver = StreamServerReceiver(sock)
-            val sender = StreamServerSender(sock)
+            val receiver = StreamServerReceiver(sock, log)
+            val sender = StreamServerSender(sock, log)
             try {
                 while (true) {
                     val request = receiver.receive()
                     if (request == null) {
+                        log.error("Получен некорректный запрос от $sock")
                         sender.send(Response(false, "Запрос некорректен"))
                     } else {
+                        log.info("Получен запрос $request от $sock")
                         sender.send(cController.process(request))
                     }
                 }
-            } catch (_: SocketException) { sock.close() }
+            } catch (_: SocketException) {
+                sock.close()
+                log.info("Соединение с $sock разорвано")
+            }
         }
     }
 
@@ -86,6 +97,7 @@ class StreamServerWorker(
                         Messenger.printMessage(message, TextColor.BLUE)
                         if (request != null) {
                             val (processing, output, _) = cController.process(request)
+                            log.info("Исполнен запрос $request из ROOT")
                             Messenger.printMessage(output, if (processing) TextColor.BLUE else TextColor.RED)
                         }
                     } else {
@@ -108,6 +120,7 @@ class StreamServerWorker(
                     )
         )
 
+        log.info("Завершение сеанса")
         exitProcess(0)
     }
 }

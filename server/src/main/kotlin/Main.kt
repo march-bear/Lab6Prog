@@ -17,6 +17,31 @@ fun main(args: Array<String>) {
         )
     }
 
-    val worker = app.koin.get<WorkerInterface> { parametersOf(5555, null) }
+    val reader = Reader()
+    val worker: WorkerInterface
+    when (args.size) {
+        0 -> {
+            Messenger.printMessage("Введите порт и название файла")
+            Messenger.inputPrompt("Название файла")
+            val fileName = reader.readStringOrNull()
+            Messenger.inputPrompt("Порт")
+            val port = reader.readString().toInt()
+            worker = app.koin.get { parametersOf(port, fileName) }
+        }
+        1 -> {
+            val port = args[0].toInt()
+            worker = app.koin.get { parametersOf(port, null) }
+        }
+        2 -> {
+            val port = args[0].toInt()
+            val fileName = args[1].toInt()
+            worker = app.koin.get { parametersOf(port, fileName) }
+        }
+        else -> {
+            Messenger.printMessage("??????????????????????????")
+            return
+        }
+    }
+
     worker.start()
 }
