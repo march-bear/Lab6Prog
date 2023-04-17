@@ -32,7 +32,8 @@ class StreamServerWorker(
     private val cController: CollectionController = get { parametersOf(if (fileName == null) null else File(fileName)) }
 
     override fun start() {
-        log.info("Новый запуск сервера")
+        println("Сервер запущен на ${serv.localSocketAddress}")
+        println("Сервер запущен на ${serv.localPort}")
         Thread {
             log.info("Активирован интерактивный режим сервера")
             enableGodMode()
