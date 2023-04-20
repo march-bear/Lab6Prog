@@ -2,6 +2,7 @@ package collection
 
 import CollectionType
 import kotlinx.serialization.Serializable
+import java.util.stream.Stream
 
 @Serializable
 class LinkedHashSetWrapper<E>(private val set: LinkedHashSet<E> = LinkedHashSet()): CollectionWrapperInterface<E> {
@@ -39,4 +40,8 @@ class LinkedHashSetWrapper<E>(private val set: LinkedHashSet<E> = LinkedHashSet(
     override fun add(element: E): Boolean = set.add(element)
 
     override fun iterator(): Iterator<E> = set.iterator()
+
+    override fun stream(): Stream<E> {
+        return set.stream()
+    }
 }

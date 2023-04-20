@@ -4,6 +4,7 @@ import CollectionType
 import kotlinx.serialization.Serializable
 import serializers.LinkedListSerializer
 import java.util.LinkedList
+import java.util.stream.Stream
 
 @Serializable
 class LinkedListWrapper<E>(
@@ -44,5 +45,9 @@ class LinkedListWrapper<E>(
         val linkedListCopy = LinkedListWrapper<E>()
         linkedListCopy.addAll(linkedList)
         return linkedListCopy
+    }
+
+    override fun stream(): Stream<E> {
+        return linkedList.stream()
     }
 }

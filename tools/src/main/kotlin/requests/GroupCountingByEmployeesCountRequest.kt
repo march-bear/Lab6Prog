@@ -6,6 +6,7 @@ import collection.CollectionWrapper
 import exceptions.CancellationException
 import iostreamers.Messenger
 import iostreamers.TextColor
+import java.util.stream.Collectors
 
 class GroupCountingByEmployeesCountRequest : Request {
     override fun process(collection: CollectionWrapper<Organization>, cController: CollectionController): Response {

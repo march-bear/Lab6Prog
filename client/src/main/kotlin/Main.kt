@@ -1,8 +1,11 @@
+import clientworker.ChannelClientWorker
 import iostreamers.Messenger
 import iostreamers.Reader
 import network.WorkerInterface
 import org.koin.core.context.startKoin
 import org.koin.core.parameter.parametersOf
+import java.net.InetAddress
+import java.net.SocketAddress
 
 fun main(args: Array<String>) {
     val app = startKoin {
@@ -19,7 +22,7 @@ fun main(args: Array<String>) {
             Messenger.inputPrompt("Порт")
             val port = reader.readString().toInt()
             worker = if (host == null)
-                app.koin.get { parametersOf(port) }
+                app.koin.get { parametersOf(port, "localhost") }
             else
                 app.koin.get { parametersOf(port, host) }
         }

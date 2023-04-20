@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 import serializers.DateAsLongSerializer
 import java.lang.IllegalArgumentException
 import java.util.Date
+import java.util.stream.Stream
 
 @Serializable
 class CollectionWrapper<E>(private var collection: CollectionWrapperInterface<E>) : CollectionWrapperInterface<E> {
@@ -47,4 +48,6 @@ class CollectionWrapper<E>(private var collection: CollectionWrapperInterface<E>
     }
 
     override fun getCollectionType(): CollectionType = collection.getCollectionType()
+
+    override fun stream(): Stream<E> = collection.stream()
 }

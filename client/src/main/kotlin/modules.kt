@@ -55,11 +55,7 @@ val clientCommandManagerModule = module {
 }
 
 val channelClientWorkerManager = module {
-    single<WorkerInterface> {(port: Int, host: String) ->
+    single<WorkerInterface> { (port: Int, host: String) ->
         ChannelClientWorker(port, host)
-    }
-
-    single<WorkerInterface> {(port: Int) ->
-        ChannelClientWorker(port)
     }
 }

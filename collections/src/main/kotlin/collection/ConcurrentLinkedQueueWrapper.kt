@@ -4,6 +4,7 @@ import CollectionType
 import kotlinx.serialization.Serializable
 import serializers.ConcurrentLinkedQueueSerializer
 import java.util.concurrent.ConcurrentLinkedQueue
+import java.util.stream.Stream
 
 @Serializable
 class ConcurrentLinkedQueueWrapper<E>(
@@ -42,4 +43,6 @@ class ConcurrentLinkedQueueWrapper<E>(
     }
 
     override fun getCollectionType(): CollectionType = CollectionType.QUEUE
+
+    override fun stream(): Stream<E> = queue.stream()
 }

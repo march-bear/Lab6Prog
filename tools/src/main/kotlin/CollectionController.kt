@@ -3,12 +3,14 @@ import commandcallgraph.RequestGraph
 import iostreamers.Messenger
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import org.slf4j.Logger
 import requests.Request
 import requests.Response
 import java.io.File
 
 class CollectionController(
     dataFileName: File? = null,
+    log: Logger? = null
 ) : KoinComponent {
     companion object {
         fun checkUniquenessFullName(fullName: String?, collection: CollectionWrapper<Organization>): Boolean {
@@ -33,7 +35,7 @@ class CollectionController(
     }
 
     private val collection: CollectionWrapper<Organization> by inject()
-    val dataFileManager: DataFileManager = DataFileManager(collection, dataFileName)
+    val dataFileManager: DataFileManager = DataFileManager(collection, dataFileName, log)
     val idManager: IdManager
     val requestGraph: RequestGraph = RequestGraph(collection, this)
 

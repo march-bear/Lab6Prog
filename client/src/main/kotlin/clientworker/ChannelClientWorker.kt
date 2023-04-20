@@ -30,10 +30,11 @@ import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.BlockingQueue
 import kotlin.NoSuchElementException
 import kotlin.system.exitProcess
+import kotlin.system.measureTimeMillis
 
 class ChannelClientWorker (
     serverPort: Int,
-    serverHost: String = "localhost",
+    serverHost: String,
 ) : WorkerInterface, KoinComponent {
     private val remote = InetSocketAddress(serverHost, serverPort)
     private var sock = SocketChannel.open()
@@ -179,31 +180,40 @@ class ChannelClientWorker (
         sock = SocketChannel.open()
         selector = Selector.open()
 
+        sock.configureBlocking(true)
+        sock.connect(remote)
+
         sock.configureBlocking(false)
+        sock.register(selector, OP_WRITE)
+        /*sock.configureBlocking(false)
         sock.register(selector, OP_CONNECT)
 
         sock.connect(remote)
 
-        selector.select()
+        val time = System.currentTimeMillis()
+        while (System.currentTimeMillis() - time < CONNECTION_TIME) {
+            selector.select(CONNECTION_TIME)
 
-        val keys: MutableIterator<SelectionKey> = selector.selectedKeys().iterator()
-        while (keys.hasNext()) {
-            val key = keys.next()
-            keys.remove()
+            val keys: MutableIterator<SelectionKey> = selector.selectedKeys().iterator()
+            while (keys.hasNext()) {
+                val key = keys.next()
+                keys.remove()
 
-            if (key.isConnectable) {
-                try {
-                    sock.finishConnect()
-                    sock.register(selector, OP_WRITE)
-                    break
-                } catch (_: SocketException) { }
+                if (key.isConnectable) {
+                    try {
+                        sock.finishConnect()
+                        sock.register(selector, OP_WRITE)
+                        break
+                    } catch (_: SocketException) {
+                    }
+                }
             }
         }
 
         if (!sock.isConnected) {
             finish()
             return false
-        }
+        }*/
 
         return true
     }
@@ -219,5 +229,9 @@ class ChannelClientWorker (
 
         if (sock.isOpen)
             sock.close()
+    }
+
+    companion object {
+        const val CONNECTION_TIME = 10000L
     }
 }

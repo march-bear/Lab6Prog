@@ -18,7 +18,7 @@ class ShowRequest : Request {
         }
 
         var output = "Элементы коллекции:"
-        collection.forEach {
+        collection.stream().forEach {
             output += "\n------------------------"
             output += "\n" + it.toString()
             output += "\n------------------------"

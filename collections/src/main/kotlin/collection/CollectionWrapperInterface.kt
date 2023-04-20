@@ -2,6 +2,7 @@ package collection
 
 import CollectionType
 import kotlinx.serialization.Serializable
+import java.util.stream.Stream
 
 @Serializable
 sealed interface CollectionWrapperInterface<E>: Iterable<E> {
@@ -31,4 +32,6 @@ sealed interface CollectionWrapperInterface<E>: Iterable<E> {
     fun getCollectionType(): CollectionType
 
     fun clone(): CollectionWrapperInterface<E>
+
+    fun stream(): Stream<E>
 }

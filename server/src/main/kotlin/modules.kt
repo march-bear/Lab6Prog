@@ -7,6 +7,7 @@ import iostreamers.Messenger
 import network.WorkerInterface
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import org.slf4j.Logger
 import serverworker.StreamServerWorker
 import java.io.File
 import kotlin.collections.HashMap
@@ -92,6 +93,10 @@ val linkedListWrapperModule = module {
 val basicCollectionControllerModule = module {
     single { (file: File?) ->
         println(file.toString()); CollectionController(file)
+    }
+
+    single(named("logging")) { (file: File?, log: Logger?) ->
+        CollectionController(file, log)
     }
 
     single<CollectionWrapper<Organization>> { CollectionWrapper(get()) }

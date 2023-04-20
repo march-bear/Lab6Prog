@@ -11,7 +11,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 class GetUniquePostalAddressRequest : Request {
     override fun process(collection: CollectionWrapper<Organization>, cController: CollectionController): Response {
-        val setOfAddresses = collection.map { it.postalAddress.toString() }.toSet()
+        val setOfAddresses = collection.map { it.postalAddress.toString() }
         if (setOfAddresses.isEmpty()) {
             return Response(
                 true,
