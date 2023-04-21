@@ -27,7 +27,7 @@ fun main(args: Array<String>) {
             while (true) {
                 try {
                     port = reader.readString().toInt()
-                    if (port < 1 || port > 65535) throw NumberFormatException()
+                    if (port < 0 || port > 65535) throw NumberFormatException()
                     worker = app.koin.get { parametersOf(port, fileName) }
                     break
                 } catch (ex: NumberFormatException) {
@@ -39,7 +39,7 @@ fun main(args: Array<String>) {
             val port: Int
             try {
                 port = args[0].toInt()
-                if (port < 1 || port > 65535) throw NumberFormatException()
+                if (port < 0 || port > 65535) throw NumberFormatException()
                 worker = app.koin.get { parametersOf(port, null) }
             } catch (ex: NumberFormatException) {
                 Messenger.printMessage("Для определения порта нужно ввести целое число от 0 до 65535: ", TextColor.RED)
@@ -50,7 +50,7 @@ fun main(args: Array<String>) {
             val port: Int
             try {
                 port = args[0].toInt()
-                if (port < 1 || port > 65535) throw NumberFormatException()
+                if (port < 0 || port > 65535) throw NumberFormatException()
                 val fileName = args[1]
                 worker = app.koin.get { parametersOf(port, fileName) }
             } catch (ex: NumberFormatException) {
