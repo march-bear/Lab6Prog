@@ -23,10 +23,10 @@ fun main(args: Array<String>) {
             while (true) {
                 try {
                     port = reader.readString().toInt()
-                    if (port < 0 || port > 65535) throw NumberFormatException()
+                    if (port < 1 || port > 65535) throw NumberFormatException()
                     break
                 } catch (ex: NumberFormatException) {
-                    Messenger.printMessage("Введите целое число от 0 до 65535", TextColor.RED)
+                    Messenger.printMessage("Введите целое число от 1 до 65535: ", TextColor.RED, false)
                 }
             }
 
@@ -59,7 +59,7 @@ fun main(args: Array<String>) {
                 "Подключиться к серверу можно:\n" +
                         "1) указав в качестве аргументов при запуске клиента адрес и порт\n" +
                         "2) указав в качестве аргумента адрес и порт в формате hostname:port\n" +
-                        "3) ввести после запуска клиента, не передавая никакие аргумента", TextColor.RED
+                        "3) ввести после запуска клиента, не передавая никакие аргумента", TextColor.YELLOW
             )
             return
         }
