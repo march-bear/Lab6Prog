@@ -16,6 +16,7 @@ import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 import org.slf4j.LoggerFactory
 import requests.Response
+import requests.SaveRequest
 import java.io.File
 import java.net.ServerSocket
 import java.net.SocketException
@@ -122,6 +123,7 @@ class StreamServerWorker(
         )
 
         log.info("Завершение сеанса")
+        cController.process(SaveRequest())
         exitProcess(0)
     }
 }
