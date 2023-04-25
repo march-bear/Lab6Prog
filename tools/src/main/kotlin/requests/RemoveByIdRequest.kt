@@ -17,14 +17,14 @@ class RemoveByIdRequest(private val id: Long) : Request {
     private var removedElement: Organization? = null
 
     override fun process(collection: CollectionWrapper<Organization>, cController: CollectionController): Response {
-        removedElement = collection.find { it.id == id }
-
-        if (removedElement != null) {
+        return try {
+            removedElement = collection.stream().filter { it.id == id }.findFirst().get()
             collection.remove(removedElement!!)
-            return Response(true, Messenger.message("Элемент удален", TextColor.BLUE))
-        }
 
-        return Response(false, Messenger.message("Элемент с id $id не найден", TextColor.RED))
+            Response(true, Messenger.message("Элемент удален", TextColor.BLUE))
+        } catch (ex: NullPointerException) {
+            Response(false, Messenger.message("Элемент с id $id не найден", TextColor.RED))
+        }
     }
 
     override fun cancel(collection: CollectionWrapper<Organization>, cController: CollectionController): String {

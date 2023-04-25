@@ -45,7 +45,7 @@ class ExecuteScriptCommand(
     }
 
     private fun addCommandsFromFile(fileName: String, commandList: LinkedList<Pair<Command, CommandArgument>>) {
-        /*if (fileName in this.scriptFiles) {
+        if (fileName in this.scriptFiles) {
             var message = "Обнаружен циклический вызов скрипта:"
 
             for (i in scriptFiles.indexOf(fileName) until scriptFiles.size)
@@ -70,9 +70,9 @@ class ExecuteScriptCommand(
             val command: Command = commandManager.getCommand(commandName)
                 ?: throwNestedScriptException(fileName, reader.lineCounter, "$commandName: команда не найдена")
 
-            for (i in 1..commandArguments.organizationLimit) {
+            if (commandArguments.needAnOrganization) {
                 try {
-                    commandArguments.organizations.add(OrganizationFactory(reader).newOrganizationFromInput())
+                    commandArguments.setOrganization(OrganizationFactory(reader).newOrganizationFromInput())
                 } catch (ex: InvalidFieldValueException) {
                     throwNestedScriptException(fileName, reader.lineCounter,
                         "Ошибка во время считывания аргумента для команды")
@@ -95,7 +95,7 @@ class ExecuteScriptCommand(
             commandData = reader.readCommand()
         }
 
-        scriptFiles.pop()*/
+        scriptFiles.pop()
     }
 
     companion object {

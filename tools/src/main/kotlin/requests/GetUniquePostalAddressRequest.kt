@@ -7,20 +7,27 @@ import exceptions.CancellationException
 import iostreamers.Messenger
 import iostreamers.TextColor
 import kotlinx.serialization.Serializable
+import java.util.stream.Collectors
 
 @Serializable
 class GetUniquePostalAddressRequest : Request {
     override fun process(collection: CollectionWrapper<Organization>, cController: CollectionController): Response {
-        val setOfAddresses = collection.map { it.postalAddress.toString() }
-        if (setOfAddresses.isEmpty()) {
+        if (collection.isEmpty()) {
             return Response(
                 true,
                 "Коллекция пуста",
                 false
             )
         }
-
-        var output = Messenger.message("Уникальные ZIP-коды элементов:")
+        val setOfAddresses = collection.stream()
+            .map { it.employeesCount }
+            .filter { it != null }
+            .collect(Collectors.toSet())
+        var output = if (setOfAddresses.isNotEmpty()) {
+            Messenger.message("Уникальные ZIP-коды элементов:")
+        } else {
+            Messenger.message("Все значения поля postalAddress являются null", TextColor.YELLOW)
+        }
 
         setOfAddresses.forEach {
             output += Messenger.message("\n$it", TextColor.BLUE)

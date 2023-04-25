@@ -11,11 +11,9 @@ import kotlin.coroutines.cancellation.CancellationException
 @Serializable
 class SumOfEmployeesCountRequest : Request {
     override fun process(collection: CollectionWrapper<Organization>, cController: CollectionController): Response {
+        if (collection.isEmpty()) return Response(true, "Коллекция пуста", false)
         val sum = collection.stream().mapToLong { it.employeesCount ?: 0 }.sum()
-        val output = if (sum == 0L)
-            Messenger.message("Коллекция пуста", TextColor.BLUE)
-        else
-            Messenger.message("Общее количество работников во всех организациях: ", TextColor.DEFAULT) +
+        val output = Messenger.message("Общее количество работников во всех организациях: ", TextColor.DEFAULT) +
                     Messenger.message("$sum", TextColor.BLUE)
 
         return Response(true, output, false)

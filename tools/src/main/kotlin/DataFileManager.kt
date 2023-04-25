@@ -71,6 +71,7 @@ class DataFileManager(
         if (data.isBlank()) {
             logger?.warn("Файл $dataFile пуст")
             logger?.info("Загрузка завершена")
+            dataHasBeenLoaded = true
             return "${output}\nФайл пуст, загрузка завершена"
         }
 
@@ -87,12 +88,14 @@ class DataFileManager(
             tmpCollection = jsonWithPolymorphicModule.decodeFromString(data)
         } catch (e: SerializationException) {
             logger?.error("Обнаружена синтаксическая ошибка, загрузка прервана")
+            dataHasBeenLoaded = true
             return output + Messenger.message(
                 "\n$dataFile: загрузка прервана вследствие обнаруженной синтаксической ошибки\n",
                 TextColor.RED,
             )
         } catch (e: IllegalArgumentException) {
             logger?.error("Формат не соответствует типу коллекции, загрузка прервана")
+            dataHasBeenLoaded = true
             return output + Messenger.message(
                 "$\ndataFile: загрузка прервана вследствие несоответствия формата данных в файле типу коллекции\n",
                 TextColor.RED,

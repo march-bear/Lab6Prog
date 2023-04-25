@@ -10,20 +10,20 @@ import java.util.stream.Collectors
 
 class GroupCountingByEmployeesCountRequest : Request {
     override fun process(collection: CollectionWrapper<Organization>, cController: CollectionController): Response {
-        val map = collection.groupBy { it.employeesCount }
-        if (map.isEmpty()) {
+        if (collection.isEmpty()) {
             return Response(
                 true,
                 "Коллекция пуста",
                 false
             )
         }
-
         var output = ""
-        map.forEach {
-            output += Messenger.message("employeesCount=${it.key}: ", TextColor.DEFAULT)
-            output += Messenger.message("${it.value.size}\n", TextColor.BLUE)
-        }
+        collection.stream()
+            .collect(Collectors.groupingBy { it.employeesCount ?: -1 })
+            .forEach {
+                output += Messenger.message("employeesCount=${if (it.key != -1L) it.key else null}: ", TextColor.DEFAULT)
+                output += Messenger.message("${it.value.size}\n", TextColor.BLUE)
+            }
 
         return Response(
             true,
